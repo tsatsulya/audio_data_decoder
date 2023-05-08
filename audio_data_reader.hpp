@@ -1,11 +1,22 @@
 #include <iostream>
-
+#include <map>
 class audio_data {
 public:
-	virtual void print();
-	virtual ~audio_data() {}
+	void print();
+	void write(const char *);
 
+	virtual ~audio_data() {}
 	virtual audio_data* clone () const = 0;
+	std::map<std::string, std::string audio_data::*> metadata = {
+		{"YEAR", &audio_data::year},
+		{"TITLE",  &audio_data::title},
+		{"ARTIST", &audio_data::artist},
+		{"ALBUM",  &audio_data::album},
+		{"COMMENT", &audio_data::comment},
+		{"DATE", &audio_data::date},
+		{"GENRE", &audio_data::genre},
+	};
+private:
 	uint64_t hash = 0;
 	std::string title = "unknown title";
 	std::string artist = "unknown artist";

@@ -73,7 +73,7 @@ static std::vector<std::string> id3v2_4_tags =                       \
 	"WCOP", "WOAF", "WOAR", "WOAS", "WORS", "WPAY", "WPUB", "WXXX"};
 
 
-static std::map<std::string, std::vector<std::string>> metadata_main_tags = {
+static std::map<std::string, std::vector<std::string>> id3_main_tags = {
 	{"YEAR", {"Year", "TYE", "TYER"}},
 	{"DATE", {"TDA", "TDAT", "TDOR", "TDRL"}},
 	{"TITLE", {"TIT2", "TT2", "Title"}},
@@ -83,15 +83,15 @@ static std::map<std::string, std::vector<std::string>> metadata_main_tags = {
 	{"COMMENT", {"COM", "COMM", "Comment"}},
 };
 
-static std::map<std::string, std::string audio_data::*> metadata = {
-	{"YEAR", &mp3_data::year},
-    {"TITLE",  &mp3_data::title},
-    {"ARTIST", &mp3_data::artist},
-    {"ALBUM",  &mp3_data::album},
-    {"COMMENT", &mp3_data::comment},
-    {"DATE", &mp3_data::date},
-    {"GENRE", &mp3_data::genre},
-};
+// static std::map<std::string, std::string audio_data::*> metadata = {
+// 	{"YEAR", &audio_data::year},
+//     {"TITLE",  &audio_data::title},
+//     {"ARTIST", &audio_data::artist},
+//     {"ALBUM",  &audio_data::album},
+//     {"COMMENT", &audio_data::comment},
+//     {"DATE", &audio_data::date},
+//     {"GENRE", &audio_data::genre},
+// };
 
 
 template<typename T> 
@@ -126,9 +126,9 @@ std::map<std::string, std::string> extract_tag_values(std::vector<std::string>& 
 void fill_mp3_info(mp3_data* track_info, std::map<std::string, std::string>& tags) {
 
 	for (auto& tag: tags) {
-		for (auto& main_tag: metadata_main_tags) {
+		for (auto& main_tag: id3_main_tags) {
 			if (std::find(main_tag.second.begin(), main_tag.second.end(), tag.first) != main_tag.second.end()) {
-				*(track_info).*metadata[main_tag.first] = tag.second;
+				*(track_info).*(track_info->metadata[main_tag.first]) = tag.second;
 			}
 		}
 	}
@@ -189,7 +189,7 @@ void FLAC_fill_track_info(flac_data *track_info, std::map <std::string, std::str
 
 	for (auto& field_data : *data_fields_info) 
 		if (std::count(fields.begin(), fields.end(), field_data.first)) 
-			(*track_info).*metadata[field_data.first] = field_data.second;
+			(*track_info).*(track_info->metadata[field_data.first]) = field_data.second;
 }
 
 
