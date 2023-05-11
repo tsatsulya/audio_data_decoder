@@ -252,10 +252,26 @@ void audio_data::print_track_info() {
 
 }
 
-void audio_data::write(const char *path) {
+audio_data::audio_data() {
+}
 
-	std::ofstream file_id;
-	file_id.open(path);
+audio_data::audio_data(Json::Value json_obj) {
+	//validate!!!
+	for (auto& field : metadata) 
+		info.*metadata[field.first] = json_obj["file_info"][field.first].asString();
+
+	file_path_ = json_obj["file_path"].asString();
+	hash_ = json_obj["hash"].asUInt64();
+
+	int tag_count = json_obj["tags"].size();
+
+	const Json::Value tags = json_obj["tags"];
+	for (int i = 0; i < tag_count; i++)
+		tags_.push_back(tags[i].asString());
+
+}
+
+Json::Value audio_data::get_json_info() {
 
 	Json::Value track;
 
@@ -270,28 +286,18 @@ void audio_data::write(const char *path) {
 		tags.append(tag);
 	track["tags"] = tags;
 
+	return track;
+}
+
+void audio_data::write(const char *path) {
+
+	std::ofstream file_id;
+	file_id.open(path);
+
+	Json::Value track = get_json_info();
+
 	Json::StyledWriter styledWriter;
 	file_id << styledWriter.write(track);
 
 	file_id.close();
-}
-
-audio_data::audio_data() {
-}
-
-audio_data::audio_data(Json::Value json_obj) {
-	for (auto& field : metadata) {
-		info.*metadata[field.first] = json_obj["file_info"][field.first].asString();
-		// std::cout << json_obj["fil_info"][field.first].asString() << std::endl;
-	}
-
-	file_path_ = json_obj["file_path"].asString();
-	hash_ = json_obj["hash"].asUInt64();
-
-	int tag_count = json_obj["tags"].size();
-
-	const Json::Value tags = json_obj["tags"];
-	for (int i = 0; i < tag_count; i++)
-		tags_.push_back(tags[i].asString());
-
 }
