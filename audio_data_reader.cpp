@@ -6,6 +6,7 @@
 #include "FLAC/metadata.h"
 #include <fstream>
 #include <json/json.h>
+#include <cctype>
 
 
 std::string simple_bites_reader(FILE *mp3_file, int num_of_bytes, int readloc = SEEK_CUR-1) {
@@ -141,7 +142,6 @@ std::map<std::string, std::string> extract_tag_values(std::vector<std::string>& 
 
 void fill_mp3_info(mp3_data* track, std::map<std::string, std::string>& tags) {
 
-	std::cout << "aaAAAAAa";
 	for (auto& tag: tags) {
 		for (auto& main_tag: id3_main_tags) {
 			if (std::find(main_tag.second.begin(), main_tag.second.end(), tag.first) != main_tag.second.end()) {
@@ -176,6 +176,15 @@ mp3_data::mp3_data(const char *file_name) {
 }
 
 
+std::string make_string_large(std::string str) {
+
+	for (int i = 0; i < str.length(); i++)
+		str[i] = toupper(str[i]);
+
+	return str;
+}
+
+
 bool FLAC_extract_fields_info(std::vector<std::string> *data_fields, std::map <std::string, std::string> *data_fields_info) {
 
 	const char separator = '=';
@@ -184,7 +193,7 @@ bool FLAC_extract_fields_info(std::vector<std::string> *data_fields, std::map <s
 	for (std::string data_field : *data_fields ) {
 
 		separator_position = data_field.find(separator);
-		(*data_fields_info)[data_field.substr(0, separator_position)] = data_field.substr(separator_position+1, data_field.length()-1);
+		(*data_fields_info)[make_string_large(data_field.substr(0, separator_position))] = data_field.substr(separator_position+1, data_field.length()-1);
 		// std::cout << (*data_fields_info)[data_field.substr(0, separator_position)] << std::endl;
 	}
 	
@@ -196,9 +205,10 @@ static const std::vector<std::string> fields = {"TITLE", "ARTIST", "ALBUM", "COM
 
 void FLAC_fill_track_info(flac_data *track, std::map <std::string, std::string> *data_fields_info) {
 
-	for (auto& field_data : *data_fields_info) 
-		if (element_is_contained(field_data.first, fields)) 
+	for (auto& field_data : *data_fields_info) {
+		if (element_is_contained(make_string_large(field_data.first), fields)) 
 			track->info.*(metadata[field_data.first]) = field_data.second;
+	}
 }
 
 
@@ -212,8 +222,11 @@ flac_data::flac_data(const char *file_name) {
 
 		std::vector<std::string> data_fields = {};
 		
-		for (int tag_ind = 0; tag_ind < tags->data.vorbis_comment.num_comments; tag_ind++) 
+		for (int tag_ind = 0; tag_ind < tags->data.vorbis_comment.num_comments; tag_ind++) {
 			data_fields.push_back((char*)tags->data.vorbis_comment.comments[tag_ind].entry);
+			std::cout << tag_ind << std::endl;
+			std::cout << tags->data.vorbis_comment.comments[tag_ind].entry;
+		} 
 
 		std::map <std::string, std::string> data_fields_info;
 		FLAC_extract_fields_info(&data_fields, &data_fields_info); //<-----!!!
