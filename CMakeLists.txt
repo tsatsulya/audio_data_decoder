@@ -8,7 +8,9 @@ add_executable(reader main.cpp audio_data_reader.cpp)
 find_package(Flac REQUIRED)
 
 target_link_libraries(reader PRIVATE FLAC::FLAC++)
+
+find_package(jsoncpp REQUIRED)
 target_include_directories(reader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # find_package(libnyquist REQUIRED)
-# target_link_libraries(reader PRIVATE libnyquist)
+target_link_libraries(reader PUBLIC jsoncpp_lib)

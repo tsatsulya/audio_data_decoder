@@ -4,6 +4,9 @@
 #include <map>
 #include <algorithm>
 #include "FLAC/metadata.h"
+#include <fstream>
+#include <json/json.h>
+
 
 std::string simple_bites_reader(FILE *mp3_file, int num_of_bytes, int readloc = SEEK_CUR-1) {
 
@@ -39,59 +42,72 @@ std::vector<std::string> get_words(std::string text_with_garbage) {
 
 static std::vector<std::string> id3v1_tags = {"Title", "Artist", "Album", "Year", "Comment", "Track" , "Genre"};
 
-static std::vector<std::string> id2v2_2_tags =                      \
-	{"BUF", "CNT", "COM", "CRA", "CRM"  , "ETC", "EQU", "GEO",      \
-	"IPL", "LNK", "MCI", "MLL", "PIC", "POP", "REV", "RVA", "SLT",  \
-	"STC", "TAL", "TBP", "TCM", "TCO", "TCR", "TDA", "TDY", "TEN",  \
-	"TFT", "TIM", "TKE", "TLA", "TLE", "TMT", "TOA", "TOF", "TOL",  \
-	"TOR", "TOT", "TP1", "TP2", "TP3", "TP4", "TPA", "TPB", "TRC",  \
-	"TRD", "TRK", "TSI", "TSS", "TT1", "TT2", "TT3", "TXT", "TXX",  \
-	"TYE", "UFI", "ULT", "WAF", "WAR", "WAS", "WCM", "WCP", "WPB",  \
+static std::vector<std::string> id2v2_2_tags =                    
+	{"BUF", "CNT", "COM", "CRA", "CRM"  , "ETC", "EQU", "GEO",    
+	"IPL", "LNK", "MCI", "MLL", "PIC", "POP", "REV", "RVA", "SLT",
+	"STC", "TAL", "TBP", "TCM", "TCO", "TCR", "TDA", "TDY", "TEN",
+	"TFT", "TIM", "TKE", "TLA", "TLE", "TMT", "TOA", "TOF", "TOL",
+	"TOR", "TOT", "TP1", "TP2", "TP3", "TP4", "TPA", "TPB", "TRC",
+	"TRD", "TRK", "TSI", "TSS", "TT1", "TT2", "TT3", "TXT", "TXX",
+	"TYE", "UFI", "ULT", "WAF", "WAR", "WAS", "WCM", "WCP", "WPB",
 	"WXX"};
 
-static std::vector<std::string> id3v2_3_tags =                       \
-	{"COMM", "COMR", "ENCR", "EQUA", "ETCO", "GEOB", "GRID", "IPLS", \
-	"LINK", "MCDI", "MLLT", "OWNE", "PRIV", "PCNT", "POPM", "POSS",  \
-	"RBUF", "RVAD", "RVRB", "SYLT", "SYTC", "TALB", "TBPM", "TCOM",  \
-	"TCON", "TCOP", "TDAT", "TDLY", "TENC", "TEXT", "TFLT", "TIME",  \
-	"TIT1", "TIT2", "TIT3", "TKEY", "TLAN", "TLEN", "TMED", "TOAL",  \
-	"TOFN", "TOLY", "TOPE", "TORY", "TOWN", "TPE1", "TPE2", "TPE3",  \
-	"TPE4", "TPOS", "TPUB", "TRCK", "TRDA", "TRSN", "TRSO", "TSIZ",  \
-	"TSRC", "TSSE", "TYER", "TXXX", "UFID", "USER", "USLT", "WCOM",  \
+
+static std::vector<std::string> id3v2_3_tags =                     
+	{"COMM", "COMR", "ENCR", "EQUA", "ETCO", "GEOB", "GRID", "IPLS",
+	"LINK", "MCDI", "MLLT", "OWNE", "PRIV", "PCNT", "POPM", "POSS",
+	"RBUF", "RVAD", "RVRB", "SYLT", "SYTC", "TALB", "TBPM", "TCOM",
+	"TCON", "TCOP", "TDAT", "TDLY", "TENC", "TEXT", "TFLT", "TIME",
+	"TIT1", "TIT2", "TIT3", "TKEY", "TLAN", "TLEN", "TMED", "TOAL",
+	"TOFN", "TOLY", "TOPE", "TORY", "TOWN", "TPE1", "TPE2", "TPE3",
+	"TPE4", "TPOS", "TPUB", "TRCK", "TRDA", "TRSN", "TRSO", "TSIZ",
+	"TSRC", "TSSE", "TYER", "TXXX", "UFID", "USER", "USLT", "WCOM",
 	"WCOP", "WOAF", "WOAR", "WOAS", "WORS", "WPAY", "WPUB", "WXXX"};
 
-static std::vector<std::string> id3v2_4_tags =                       \
-	{"AENC", "APIC", "ASPI", "COMM", "COMR", "ENCR", "EQU2", "ETCO", \
-	"GEOB", "GRID", "LINK", "MCDI", "MLLT", "OWNE", "PRIV", "PCNT",  \
-	"POPM", "POSS", "RBUF", "RVA2", "RVRB", "SEEK", "SIGN", "SYLT",  \
-	"SYTC", "TALB", "TBPM", "TCOM", "TCON", "TCOP", "TDEN", "TDLY",  \
-	"TDOR", "TDRC", "TDRL", "TDTG", "TENC", "TEXT", "TFLT", "TIPL",  \
-	"TIT1", "TIT2", "TIT3", "TKEY", "TLAN", "TLEN", "TMCL", "TMED",  \
-	"TMOO", "TOAL", "TOFN", "TOLY", "TOPE", "TOWN", "TPE1", "TPE2",  \
-	"TPE3", "TPE4", "TPOS", "TPRO", "TPUB", "TRCK", "TRSN", "TRSO",  \
-	"TSOA", "TSOP", "TSOT", "TSRC", "TSSE", "TSST", "TXXX", "WCOM",  \
+
+static std::vector<std::string> id3v2_4_tags =                    
+	{"AENC", "APIC", "ASPI", "COMM", "COMR", "ENCR", "EQU2", "ETCO",
+	"GEOB", "GRID", "LINK", "MCDI", "MLLT", "OWNE", "PRIV", "PCNT",
+	"POPM", "POSS", "RBUF", "RVA2", "RVRB", "SEEK", "SIGN", "SYLT",
+	"SYTC", "TALB", "TBPM", "TCOM", "TCON", "TCOP", "TDEN", "TDLY",
+	"TDOR", "TDRC", "TDRL", "TDTG", "TENC", "TEXT", "TFLT", "TIPL",
+	"TIT1", "TIT2", "TIT3", "TKEY", "TLAN", "TLEN", "TMCL", "TMED",
+	"TMOO", "TOAL", "TOFN", "TOLY", "TOPE", "TOWN", "TPE1", "TPE2",
+	"TPE3", "TPE4", "TPOS", "TPRO", "TPUB", "TRCK", "TRSN", "TRSO",
+	"TSOA", "TSOP", "TSOT", "TSRC", "TSSE", "TSST", "TXXX", "WCOM",
 	"WCOP", "WOAF", "WOAR", "WOAS", "WORS", "WPAY", "WPUB", "WXXX"};
 
 
 static std::map<std::string, std::vector<std::string>> id3_main_tags = {
-	{"YEAR", {"Year", "TYE", "TYER"}},
-	{"DATE", {"TDA", "TDAT", "TDOR", "TDRL"}},
 	{"TITLE", {"TIT2", "TT2", "Title"}},
 	{"ARTIST", {"TPE1", "TP1", "Artist"}},
-	{"GENRE", {"TCON", "TCO", "Genre"}},
 	{"ALBUM", {"TALB", "TAL", "Album"}},
+	{"COMPOSER", {"TCOM", "TCM"}},
+	{"YEAR", {"Year", "TYE", "TYER", "TDRC"}},
+	{"DATE", {"TDA", "TDAT", "TDOR", "TDRL"}},
+	{"PERFORMER", {"TPE2", "TPE3", "TPE4", "TP2", "TP3", "TP4"}},
+	{"GENRE", {"TCON", "TCO", "Genre"}},
+	{"LENGTH", {"TLE", "TLEN"}},
 	{"COMMENT", {"COM", "COMM", "Comment"}},
+	{"PIC", {"PIC"}},
+	{"DESCRIPTION", {"TIT3", "TT3"}}
 };
 
-// static std::map<std::string, std::string audio_data::*> metadata = {
-// 	{"YEAR", &audio_data::year},
-//     {"TITLE",  &audio_data::title},
-//     {"ARTIST", &audio_data::artist},
-//     {"ALBUM",  &audio_data::album},
-//     {"COMMENT", &audio_data::comment},
-//     {"DATE", &audio_data::date},
-//     {"GENRE", &audio_data::genre},
-// };
+
+static std::map<std::string, std::string track_info::*> metadata = {
+	{"TITLE", &track_info::title},
+	{"ARTIST", &track_info::artist},
+	{"ALBUM", &track_info::album},
+	{"COMPOSER", &track_info::composer},
+	{"YEAR", &track_info::year},
+	{"DATE", &track_info::date},
+	{"PERFORMER", &track_info::performer},
+	{"GENRE", &track_info::genre},
+	// {"LENGTH", &mp3_info::length},
+	{"COMMENT", &track_info::comment},
+	// {"PIC", &mp3_info::pic},
+	{"DESCRIPTION", &track_info::description}
+};
 
 
 template<typename T> 
@@ -123,12 +139,13 @@ std::map<std::string, std::string> extract_tag_values(std::vector<std::string>& 
 }
 
 
-void fill_mp3_info(mp3_data* track_info, std::map<std::string, std::string>& tags) {
+void fill_mp3_info(mp3_data* track, std::map<std::string, std::string>& tags) {
 
+	std::cout << "aaAAAAAa";
 	for (auto& tag: tags) {
 		for (auto& main_tag: id3_main_tags) {
 			if (std::find(main_tag.second.begin(), main_tag.second.end(), tag.first) != main_tag.second.end()) {
-				*(track_info).*(track_info->metadata[main_tag.first]) = tag.second;
+				track->info.*(metadata[main_tag.first]) = tag.second;
 			}
 		}
 	}
@@ -159,13 +176,6 @@ mp3_data::mp3_data(const char *file_name) {
 }
 
 
-// void mp3_data::print() {
-// 	for (auto& field: metadata) 
-// 		std::cout << field.first << "\t\t" << this->*field.second << std::endl;
-// }
-
-
-
 bool FLAC_extract_fields_info(std::vector<std::string> *data_fields, std::map <std::string, std::string> *data_fields_info) {
 
 	const char separator = '=';
@@ -181,15 +191,14 @@ bool FLAC_extract_fields_info(std::vector<std::string> *data_fields, std::map <s
 	return true; //<------- !!!!!
 }
 
+static const std::vector<std::string> fields = {"TITLE", "ARTIST", "ALBUM", "COMMENT", "COMPOSER", "DATE", "GENRE", "PERFORMER"};
 
-static const std::vector<std::string> fields = {"TITLE", "ARTIST", "ALBUM", "COMMENT", "DATE", "GENRE"};
 
-
-void FLAC_fill_track_info(flac_data *track_info, std::map <std::string, std::string> *data_fields_info) {
+void FLAC_fill_track_info(flac_data *track, std::map <std::string, std::string> *data_fields_info) {
 
 	for (auto& field_data : *data_fields_info) 
-		if (std::count(fields.begin(), fields.end(), field_data.first)) 
-			(*track_info).*(track_info->metadata[field_data.first]) = field_data.second;
+		if (element_is_contained(field_data.first, fields)) 
+			track->info.*(metadata[field_data.first]) = field_data.second;
 }
 
 
@@ -206,22 +215,83 @@ flac_data::flac_data(const char *file_name) {
 		for (int tag_ind = 0; tag_ind < tags->data.vorbis_comment.num_comments; tag_ind++) 
 			data_fields.push_back((char*)tags->data.vorbis_comment.comments[tag_ind].entry);
 
-
 		std::map <std::string, std::string> data_fields_info;
 		FLAC_extract_fields_info(&data_fields, &data_fields_info); //<-----!!!
 
 		FLAC_fill_track_info(this, &data_fields_info);
 	}
 	else {} //<------- 	exception!!!!!!!!!
+
+	file_path_ = file_name;
 }
 
 
-void audio_data::print() {
+void audio_data::print_file_info() {
 
-	std::cout << "\n________________AUDIO_FILE_INFO________________\n" << std::endl;
-	for (auto& field_data : fields) 
-		std::cout << field_data << " -- " << this->*metadata[field_data] << std::endl;
+	std::cout << "\n__________________FILE_INFO________________\n" << std::endl;
+	for (auto& field : metadata) 
+		std::cout << field.first << " -- " << info.*metadata[field.first] << std::endl;
 	
-	std::cout << "_______________________________________________\n" << std::endl;
+	std::cout << "_____________________________________________\n" << std::endl;
+
+}
+
+void audio_data::print_track_info() {
+
+	std::cout << "\n_________________AUDIO_INFO________________\n" << std::endl;
+	for (auto& field : metadata) 
+		std::cout << field.first << "\t\t" << info.*metadata[field.first] << std::endl;
+	
+	std::cout << "\nHASH\t" << hash_ << std::endl;
+	std::cout << "\nPATH\t" << file_path_ << std::endl;
+	std::cout << "\nTAGS\t" << std::endl;
+	for (int i = 0; i < tags_.size(); i++) 
+		std::cout << "\t\t" << tags_[i] << std::endl;
+	// std::cout << tags_.size();
+	std::cout << "_____________________________________________\n" << std::endl;
+
+}
+
+void audio_data::write(const char *path) {
+
+	std::ofstream file_id;
+	file_id.open(path);
+
+	Json::Value track;
+
+	for (auto& field : metadata) {
+		track["file_info"][field.first] = info.*metadata[field.first];
+	}
+	track["file_path"] = file_path_;
+	track["hash"] = hash_;
+
+	Json::Value tags(Json::arrayValue);
+	for (auto& tag: tags_) 
+		tags.append(tag);
+	track["tags"] = tags;
+
+	Json::StyledWriter styledWriter;
+	file_id << styledWriter.write(track);
+
+	file_id.close();
+}
+
+audio_data::audio_data() {
+}
+
+audio_data::audio_data(Json::Value json_obj) {
+	for (auto& field : metadata) {
+		info.*metadata[field.first] = json_obj["file_info"][field.first].asString();
+		// std::cout << json_obj["fil_info"][field.first].asString() << std::endl;
+	}
+
+	file_path_ = json_obj["file_path"].asString();
+	hash_ = json_obj["hash"].asUInt64();
+
+	int tag_count = json_obj["tags"].size();
+
+	const Json::Value tags = json_obj["tags"];
+	for (int i = 0; i < tag_count; i++)
+		tags_.push_back(tags[i].asString());
 
 }
