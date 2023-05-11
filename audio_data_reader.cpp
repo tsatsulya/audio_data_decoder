@@ -202,7 +202,8 @@ bool FLAC_extract_fields_info(std::vector<std::string> *data_fields, std::map <s
 
 static const std::vector<std::string> fields = {"TITLE", "ARTIST", "ALBUM", "COMMENT", "COMPOSER", "DATE", "GENRE", "PERFORMER"};
 
-
+audio_data::audio_data() {
+}
 void FLAC_fill_track_info(flac_data *track, std::map <std::string, std::string> *data_fields_info) {
 
 	for (auto& field_data : *data_fields_info) {
@@ -265,8 +266,6 @@ void audio_data::print_track_info() {
 
 }
 
-audio_data::audio_data() {
-}
 
 audio_data::audio_data(Json::Value json_obj) {
 	//validate!!!
