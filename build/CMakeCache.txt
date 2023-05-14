@@ -52,7 +52,7 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //C compiler
-CMAKE_C_COMPILER:STRING=/usr/bin/cc
+CMAKE_C_COMPILER:FILEPATH=/usr/bin/cc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -225,23 +225,8 @@ audio-data_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 audio-data_SOURCE_DIR:STATIC=/home/varvara/projects/audio_data_reader
 
-//The directory containing a CMake configuration file for jso.
-jso_DIR:PATH=jso_DIR-NOTFOUND
-
-//The directory containing a CMake configuration file for json.
-json_DIR:PATH=json_DIR-NOTFOUND
-
 //The directory containing a CMake configuration file for jsoncpp.
 jsoncpp_DIR:PATH=/usr/lib64/cmake/jsoncpp
-
-//Value Computed by CMake
-"reader:3_BINARY_DIR":STATIC=/home/varvara/projects/audio_data_reader/build
-
-//Value Computed by CMake
-"reader:3_IS_TOP_LEVEL":STATIC=ON
-
-//Value Computed by CMake
-"reader:3_SOURCE_DIR":STATIC=/home/varvara/projects/audio_data_reader
 
 
 ########################

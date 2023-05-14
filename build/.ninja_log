@@ -1,7 +1,3 @@
 # ninja log v5
-2	1593	1684085071331668239	CMakeFiles/audio-data.dir/audio_data_reader.cpp.o	22f7d0255b86167c
-1593	1765	1684085071519668515	libaudio-data.so	336039adfc94b6b1
-1	69	1684085609151460431	build.ninja	e31b1f339e086903
-1	1009	1684083326951198928	CMakeFiles/reader.dir/main.cpp.o	419ace8073339346
-2	1743	1684083327676199950	CMakeFiles/reader.dir/audio_data_reader.cpp.o	75d7e828c69c78e5
-1766	1966	1684085071718668808	reader	54d5b44dc93cd5f7
+1	1649	1684095590809811495	CMakeFiles/reader.dir/audio_data_reader.cpp.o	75d7e828c69c78e5
+1	1650	1684095590809811495	CMakeFiles/audio-data.dir/audio_data_reader.cpp.o	22f7d0255b86167c

@@ -18,7 +18,7 @@ target_link_libraries(reader PUBLIC jsoncpp_lib)
 
 add_library(audio-data SHARED
 			audio_data_reader.cpp 
-			audio_data_reader.h)
+			audio_data.h)
 
 target_include_directories(audio-data PRIVATE source)
 set_target_properties(audio-data PROPERTIES PUBLIC_HEADER audio_data_reader.h)
