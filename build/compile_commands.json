@@ -10,5 +10,11 @@
   "command": "/usr/bin/clang++ -DFLAC__NO_DLL -I/home/varvara/projects/audio_data_reader -g -o CMakeFiles/reader.dir/audio_data_reader.cpp.o -c /home/varvara/projects/audio_data_reader/audio_data_reader.cpp",
   "file": "/home/varvara/projects/audio_data_reader/audio_data_reader.cpp",
   "output": "CMakeFiles/reader.dir/audio_data_reader.cpp.o"
+},
+{
+  "directory": "/home/varvara/projects/audio_data_reader/build",
+  "command": "/usr/bin/clang++ -Daudio_data_EXPORTS -I/home/varvara/projects/audio_data_reader/source -g -fPIC -o CMakeFiles/audio-data.dir/audio_data_reader.cpp.o -c /home/varvara/projects/audio_data_reader/audio_data_reader.cpp",
+  "file": "/home/varvara/projects/audio_data_reader/audio_data_reader.cpp",
+  "output": "CMakeFiles/audio-data.dir/audio_data_reader.cpp.o"
 }
 ]

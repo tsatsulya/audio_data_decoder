@@ -1,3 +1,4 @@
 /home/varvara/projects/audio_data_reader/build/CMakeFiles/reader.dir
+/home/varvara/projects/audio_data_reader/build/CMakeFiles/audio-data.dir
 /home/varvara/projects/audio_data_reader/build/CMakeFiles/edit_cache.dir
 /home/varvara/projects/audio_data_reader/build/CMakeFiles/rebuild_cache.dir
