@@ -94,19 +94,19 @@ static std::map<std::string, std::vector<std::string>> id3_main_tags = {
 };
 
 
-static std::map<std::string, std::string track_info::*> metadata = {
-	{"TITLE", &track_info::title},
-	{"ARTIST", &track_info::artist},
-	{"ALBUM", &track_info::album},
-	{"COMPOSER", &track_info::composer},
-	{"YEAR", &track_info::year},
-	{"DATE", &track_info::date},
-	{"PERFORMER", &track_info::performer},
-	{"GENRE", &track_info::genre},
-	// {"LENGTH", &mp3_info::length},
-	{"COMMENT", &track_info::comment},
-	// {"PIC", &mp3_info::pic},
-	{"DESCRIPTION", &track_info::description}
+static std::map<std::string, std::string audio::track_info::*> metadata = {
+	{"TITLE", &audio::track_info::title},
+	{"ARTIST", &audio::track_info::artist},
+	{"ALBUM", &audio::track_info::album},
+	{"COMPOSER", &audio::track_info::composer},
+	{"YEAR", &audio::track_info::year},
+	{"DATE", &audio::track_info::date},
+	{"PERFORMER", &audio::track_info::performer},
+	{"GENRE", &audio::track_info::genre},
+	// {"LENGTHaudio::", &mp3_info::length},
+	{"COMMENT", &audio::track_info::comment},
+	// {"PICaudio::", &mp3_info::pic},
+	{"DESCRIPTION", &audio::track_info::description}
 };
 
 
@@ -139,7 +139,7 @@ std::map<std::string, std::string> extract_tag_values(std::vector<std::string>& 
 }
 
 
-void fill_mp3_info(mp3_data* track, std::map<std::string, std::string>& tags) {
+void fill_mp3_info(audio::mp3_data* track, std::map<std::string, std::string>& tags) {
 
 	for (auto& tag: tags) {
 		for (auto& main_tag: id3_main_tags) {
@@ -160,7 +160,7 @@ bool check_mp3_format(FILE *mp3_file) {
 }
 
 
-mp3_data::mp3_data(const char *file_name) {
+audio::mp3_data::mp3_data(const char *file_name) {
 	FILE* file = fopen(file_name, "r");
 
 	if (!file || !check_mp3_format(file)) throw std::invalid_argument("STRANGE PATH..... >:("); //<----- AAAAAAAAAAA!!!!!
@@ -201,9 +201,7 @@ bool FLAC_extract_fields_info(std::vector<std::string> *data_fields, std::map <s
 
 static const std::vector<std::string> fields = {"TITLE", "ARTIST", "ALBUM", "COMMENT", "COMPOSER", "DATE", "GENRE", "PERFORMER"};
 
-audio_data::audio_data() {
-}
-void FLAC_fill_track_info(flac_data *track, std::map <std::string, std::string> *data_fields_info) {
+void FLAC_fill_track_info(audio::flac_data *track, std::map <std::string, std::string> *data_fields_info) {
 
 	for (auto& field_data : *data_fields_info) {
 		if (element_is_contained(make_string_large(field_data.first), fields)) 
@@ -212,7 +210,7 @@ void FLAC_fill_track_info(flac_data *track, std::map <std::string, std::string> 
 }
 
 
-flac_data::flac_data(const char *file_name) {
+audio::flac_data::flac_data(const char *file_name) {
 	
 	FLAC__StreamMetadata* tags;
 
