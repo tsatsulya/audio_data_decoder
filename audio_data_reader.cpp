@@ -237,7 +237,7 @@ audio::flac_data::flac_data(const char *file_name) {
 }
 
 
-void audio_data::print_file_info() {
+void audio::audio_data::print_file_info() {
 
 	std::cout << "\n__________________FILE_INFO________________\n" << std::endl;
 	for (auto& field : metadata) 
@@ -247,7 +247,7 @@ void audio_data::print_file_info() {
 
 }
 
-void audio_data::print_track_info() {
+void audio::audio_data::print_track_info() {
 
 	std::cout << "\n_________________AUDIO_INFO________________\n" << std::endl;
 	for (auto& field : metadata) 
@@ -264,7 +264,7 @@ void audio_data::print_track_info() {
 }
 
 
-audio_data::audio_data(Json::Value json_obj) {
+audio::audio_data::audio_data(Json::Value json_obj) {
 	//validate!!!
 	for (auto& field : metadata) 
 		info.*metadata[field.first] = json_obj["file_info"][field.first].asString();
@@ -280,7 +280,7 @@ audio_data::audio_data(Json::Value json_obj) {
 
 }
 
-Json::Value audio_data::get_json_info() {
+Json::Value audio::audio_data::get_json_info() {
 
 	Json::Value track;
 
@@ -298,7 +298,7 @@ Json::Value audio_data::get_json_info() {
 	return track;
 }
 
-void audio_data::write(const char *path) {
+void audio::audio_data::write(const char *path) {
 
 	std::ofstream file_id;
 	file_id.open(path);
