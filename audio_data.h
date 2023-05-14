@@ -32,6 +32,7 @@ namespace audio {
 
 		track_info get_info() { return info; }
 		Json::Value get_json_info();
+		std::vector<std::string> &get_tags() {return tags_;}
 		// std::string get_file_path() {return file_path_;}
 		audio_data() {};
 		audio_data(Json::Value);
