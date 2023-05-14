@@ -22,6 +22,7 @@ namespace audio {
 
 	class playlist {
 	public:
+		std::string name;
 		std::string type_;  //album or custom_playlist
 		std::vector<audio_data*> tracklist_;
 	};
