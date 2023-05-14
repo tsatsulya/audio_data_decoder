@@ -20,6 +20,11 @@ namespace audio {
 		std::string description = "";
 	};
 
+	class playlist {
+	public:
+		std::string type_;  //album or custom_playlist
+		std::vector<audio_data*> tracklist_;
+	};
 	class audio_data {
 	public:
 		track_info info;
@@ -32,7 +37,7 @@ namespace audio {
 
 		track_info get_info() { return info; }
 		Json::Value get_json_info();
-		std::vector<std::string> &get_tags() {return tags_;}
+		std::vector<std::string> &get_tags() { return tags_; }
 		// std::string get_file_path() {return file_path_;}
 		audio_data() {};
 		audio_data(Json::Value);
