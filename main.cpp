@@ -18,9 +18,9 @@ void write(const char * path, std::vector<audio::audio_data*> &tracks) {
 }
 
 int main() {
-	audio::mp3_data* data = new mp3_data("/home/varvara/projects/mp3_data_reader/Tim Buckley - Once I Was.mp3");
+	audio::mp3_data* data = new audio::mp3_data("/home/varvara/projects/mp3_data_reader/Tim Buckley - Once I Was.mp3");
 	data->print_file_info();
-	audio::flac_data* data1 = new flac_data("/home/varvara/Music/Tool/2019. Fear Inoculum (Digital Version) [none]/04. Invincible.flac");
+	audio::flac_data* data1 = new audio::flac_data("/home/varvara/Music/Tool/2019. Fear Inoculum (Digital Version) [none]/04. Invincible.flac");
 	data1->print_file_info();
 
 	// Json::Value track;
