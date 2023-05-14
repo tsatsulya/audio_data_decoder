@@ -8,7 +8,6 @@
 #include <json/json.h>
 #include <cctype>
 
-
 std::string simple_bites_reader(FILE *mp3_file, int num_of_bytes, int readloc = SEEK_CUR-1) {
 
 	std::string buffer(num_of_bytes, '\0');
