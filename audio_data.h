@@ -20,12 +20,6 @@ namespace audio {
 		std::string description = "";
 	};
 
-	class playlist {
-	public:
-		std::string name;
-		std::string type_;  //album or custom_playlist
-		std::vector<audio_data*> tracklist_;
-	};
 	class audio_data {
 	public:
 		track_info info;
@@ -68,5 +62,12 @@ namespace audio {
 		// } 
 		flac_data();
 		flac_data(const char *);
+	};
+
+	class playlist {
+	public:
+		std::string name;
+		std::string type_;  //album or custom_playlist
+		std::vector<audio_data*> tracklist_;
 	};
 }
