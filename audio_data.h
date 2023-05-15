@@ -3,7 +3,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 
 namespace audio {
 	struct track_info {
