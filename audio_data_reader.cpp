@@ -5,7 +5,8 @@
 #include <algorithm>
 #include "FLAC/metadata.h"
 #include <fstream>
-#include <json/json.h>
+
+#include <jsoncpp/json/json.h>
 #include <cctype>
 
 std::string simple_bites_reader(FILE *mp3_file, int num_of_bytes, int readloc = SEEK_CUR-1) {
