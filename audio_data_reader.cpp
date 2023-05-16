@@ -144,7 +144,7 @@ void fill_mp3_info(audio::mp3_data* track, std::map<std::string, std::string>& t
 	for (auto& tag: tags) {
 		for (auto& main_tag: id3_main_tags) {
 			if (std::find(main_tag.second.begin(), main_tag.second.end(), tag.first) != main_tag.second.end()) {
-				track->info.*(metadata[main_tag.first]) = tag.second;
+				track->info_.*(metadata[main_tag.first]) = tag.second;
 			}
 		}
 	}
@@ -205,7 +205,7 @@ void FLAC_fill_track_info(audio::flac_data *track, std::map <std::string, std::s
 
 	for (auto& field_data : *data_fields_info) {
 		if (element_is_contained(make_string_large(field_data.first), fields)) 
-			track->info.*(metadata[field_data.first]) = field_data.second;
+			track->info_.*(metadata[field_data.first]) = field_data.second;
 	}
 }
 
@@ -241,7 +241,7 @@ void audio::audio_data::print_file_info() {
 
 	std::cout << "\n__________________FILE_INFO________________\n" << std::endl;
 	for (auto& field : metadata) 
-		std::cout << field.first << " -- " << info.*metadata[field.first] << std::endl;
+		std::cout << field.first << " -- " << info_.*metadata[field.first] << std::endl;
 	
 	std::cout << "_____________________________________________\n" << std::endl;
 
@@ -251,7 +251,7 @@ void audio::audio_data::print_track_info() {
 
 	std::cout << "\n_________________AUDIO_INFO________________\n" << std::endl;
 	for (auto& field : metadata) 
-		std::cout << field.first << "\t\t" << info.*metadata[field.first] << std::endl;
+		std::cout << field.first << "\t\t" << info_.*metadata[field.first] << std::endl;
 	
 	std::cout << "\nHASH\t" << hash_ << std::endl;
 	std::cout << "\nPATH\t" << file_path_ << std::endl;
@@ -267,7 +267,7 @@ void audio::audio_data::print_track_info() {
 audio::audio_data::audio_data(Json::Value json_obj) {
 	//validate!!!
 	for (auto& field : metadata) 
-		info.*metadata[field.first] = json_obj["file_info"][field.first].asString();
+		info_.*metadata[field.first] = json_obj["file_info"][field.first].asString();
 
 	file_path_ = json_obj["file_path"].asString();
 	hash_ = json_obj["hash"].asUInt64();
@@ -285,7 +285,7 @@ Json::Value audio::audio_data::get_json_info() {
 	Json::Value track;
 
 	for (auto& field : metadata) {
-		track["file_info"][field.first] = info.*metadata[field.first];
+		track["file_info"][field.first] = info_.*metadata[field.first];
 	}
 	track["file_path"] = file_path_;
 	track["hash"] = hash_;

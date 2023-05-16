@@ -75,5 +75,4 @@ namespace audio {
 	};
 
 	using playlists_t = std::vector<audio::playlist*>;
-
 }
