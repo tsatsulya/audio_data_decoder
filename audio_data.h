@@ -23,7 +23,7 @@ namespace audio {
 
 	class audio_data {
 	public:
-		track_info info;
+		track_info info_;
 
 		void print_file_info();
 		void print_track_info();
@@ -31,7 +31,7 @@ namespace audio {
 		void read_from_json(Json::Value);
 		// void set_file_path(const char* file_path) {file_path_ = file_path;}
 
-		track_info get_info() { return info; }
+		track_info get_info() { return info_; }
 		Json::Value get_json_info();
 		std::vector<std::string> &get_tags() { return tags_; }
 		// std::string get_file_path() {return file_path_;}
