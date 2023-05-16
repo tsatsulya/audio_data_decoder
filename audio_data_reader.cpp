@@ -222,8 +222,8 @@ audio::flac_data::flac_data(const char *file_name) {
 		
 		for (int tag_ind = 0; tag_ind < tags->data.vorbis_comment.num_comments; tag_ind++) {
 			data_fields.push_back((char*)tags->data.vorbis_comment.comments[tag_ind].entry);
-			std::cout << tag_ind << std::endl;
-			std::cout << tags->data.vorbis_comment.comments[tag_ind].entry;
+			// std::cout << tag_ind << std::endl;
+			// std::cout << tags->data.vorbis_comment.comments[tag_ind].entry;
 		} 
 
 		std::map <std::string, std::string> data_fields_info;
