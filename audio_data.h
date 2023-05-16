@@ -6,6 +6,7 @@
 #include <json/json.h>
 
 namespace audio {
+
 	struct track_info {
 		std::string title = "unknown title";
 		std::string artist = "unknown artist";
@@ -64,10 +65,15 @@ namespace audio {
 		flac_data(const char *);
 	};
 
+	using tracklist_t = std::vector<audio::audio_data*>;
+
 	class playlist {
 	public:
 		std::string name;
 		std::string type_;  //album or custom_playlist
 		std::vector<audio_data*> tracklist_;
 	};
+
+	using playlists_t = std::vector<audio::playlist*>;
+
 }
