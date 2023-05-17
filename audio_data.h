@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUDIO_DATA_DECODER_H
+#define AUDIO_DATA_DECODER_H
 
 #include <iostream>
 #include <map>
@@ -76,3 +77,5 @@ namespace audio {
 
 	using playlists_t = std::vector<audio::playlist*>;
 }
+
+#endif
