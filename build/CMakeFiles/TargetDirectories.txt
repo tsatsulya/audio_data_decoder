@@ -1,4 +1,0 @@
-/home/varvara/projects/audio_data_decoder/build/CMakeFiles/reader.dir
-/home/varvara/projects/audio_data_decoder/build/CMakeFiles/audio-data.dir
-/home/varvara/projects/audio_data_decoder/build/CMakeFiles/edit_cache.dir
-/home/varvara/projects/audio_data_decoder/build/CMakeFiles/rebuild_cache.dir
